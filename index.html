@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="मेरी पर्सनल वेबसाइट">
+  <title>My Personal Website</title>
+  <style>
+    :root { --accent:#2563eb; --bg:#f5f7fb; --ink:#172033; --card:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:system-ui,-apple-system,Segoe UI,sans-serif; color:var(--ink); background:var(--bg); line-height:1.6; }
+    header { background:linear-gradient(135deg,#172554,#2563eb); color:white; padding:52px 20px; text-align:center; }
+    header h1 { font-size:clamp(2rem,6vw,3.3rem); margin:8px 0; }
+    header p { margin:0 auto; max-width:650px; color:#e5edff; }
+    nav { display:flex; flex-wrap:wrap; justify-content:center; gap:18px; padding:14px; background:white; position:sticky; top:0; box-shadow:0 2px 12px #0f172a12; }
+    nav a { color:var(--ink); text-decoration:none; font-weight:600; }
+    main { max-width:900px; margin:32px auto; padding:0 18px; }
+    section,.panel { background:var(--card); padding:24px; border-radius:18px; margin:18px 0; box-shadow:0 5px 24px #0f172a0b; }
+    h2 { margin-top:0; color:#1e3a8a; }
+    .actions { display:flex; justify-content:center; gap:10px; margin-top:18px; flex-wrap:wrap; }
+    button { border:0; border-radius:10px; padding:10px 16px; background:var(--accent); color:white; font-weight:700; cursor:pointer; }
+    button.secondary { background:#e8eefc; color:#1e3a8a; }
+    input,textarea { width:100%; padding:10px; margin:5px 0 12px; border:1px solid #cbd5e1; border-radius:9px; font:inherit; }
+    label { font-weight:650; }
+    .hidden { display:none; }
+    footer { text-align:center; padding:28px; color:#64748b; }
+    .notice { background:#fff7ed; border-left:4px solid #f59e0b; padding:12px 14px; border-radius:8px; font-size:.95rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="font-size:3rem" aria-hidden="true">👋</div>
+    <h1 id="siteName">मेरी पर्सनल वेबसाइट</h1>
+    <p id="tagline">यहाँ अपना छोटा-सा परिचय लिखें।</p>
+    <div class="actions"><button onclick="document.querySelector('#about').scrollIntoView({behavior:'smooth'})">मेरे बारे में</button></div>
+  </header>
+
+  <nav aria-label="मुख्य मेन्यू">
+    <a href="#about">परिचय</a><a href="#interests">रुचियाँ</a><a href="#work">मेरे काम</a><a href="#contact">संपर्क</a>
+  </nav>
+
+  <main>
+    <section id="about"><h2>मेरे बारे में</h2><p id="aboutText">यहाँ अपना परिचय, पढ़ाई या सामान्य जानकारी लिखें।</p></section>
+    <section id="interests"><h2>मेरी रुचियाँ</h2><p id="interestsText">यहाँ अपने शौक और पसंद लिखें।</p></section>
+    <section id="work"><h2>मेरे काम और प्रोजेक्ट</h2><p id="workText">यहाँ अपने प्रोजेक्ट, उपलब्धियाँ या काम जोड़ें।</p></section>
+    <section id="contact"><h2>संपर्क</h2><p id="contactText">यहाँ केवल ऐसा संपर्क तरीका दें जिसे सार्वजनिक करना सुरक्षित हो।</p></section>
+
+    <section class="panel">
+      <h2>वेबसाइट एडिट करें</h2>
+      <p class="notice">यह शुरुआती डेमो है। बदलाव इसी ब्राउज़र/डिवाइस में सेव होंगे। इन्हें सभी इंटरनेट विज़िटर्स तक पहुँचाने के लिए बाद में सुरक्षित ऑनलाइन डेटाबेस और एडमिन लॉगिन जोड़ना होगा।</p>
+      <button class="secondary" onclick="toggleEditor()">एडिट पैनल खोलें / बंद करें</button>
+      <form id="editor" class="hidden" onsubmit="saveContent(event)" style="margin-top:18px">
+        <label>वेबसाइट का नाम</label><input id="editName" maxlength="60">
+        <label>छोटी टैगलाइन</label><input id="editTagline" maxlength="140">
+        <label>मेरे बारे में</label><textarea id="editAbout" rows="3" maxlength="1000"></textarea>
+        <label>मेरी रुचियाँ</label><textarea id="editInterests" rows="3" maxlength="1000"></textarea>
+        <label>मेरे काम और प्रोजेक्ट</label><textarea id="editWork" rows="3" maxlength="1000"></textarea>
+        <label>सार्वजनिक संपर्क जानकारी (वैकल्पिक)</label><textarea id="editContact" rows="2" maxlength="500"></textarea>
+        <button type="submit">बदलाव सेव करें</button>
+        <button type="button" class="secondary" onclick="resetContent()">डिफ़ॉल्ट पर वापस जाएँ</button>
+      </form>
+    </section>
+  </main>
+  <footer>© <span id="year"></span> <span id="footerName">मेरी पर्सनल वेबसाइट</span></footer>
+
+<script>
+const defaults = {
+  name:"मेरी पर्सनल वेबसाइट", tagline:"यहाँ अपना छोटा-सा परिचय लिखें।",
+  about:"यहाँ अपना परिचय, पढ़ाई या सामान्य जानकारी लिखें।",
+  interests:"यहाँ अपने शौक और पसंद लिखें।",
+  work:"यहाँ अपने प्रोजेक्ट, उपलब्धियाँ या काम जोड़ें।",
+  contact:"यहाँ केवल ऐसा संपर्क तरीका दें जिसे सार्वजनिक करना सुरक्षित हो।"
+};
+const fields = ["name","tagline","about","interests","work","contact"];
+function getContent() {
+  try { return {...defaults, ...JSON.parse(localStorage.getItem("myPersonalSite") || "{}")}; }
+  catch { return {...defaults}; }
+}
+function render() {
+  const d=getContent();
+  document.getElementById("siteName").textContent=d.name;
+  document.getElementById("footerName").textContent=d.name;
+  document.getElementById("tagline").textContent=d.tagline;
+  document.getElementById("aboutText").textContent=d.about;
+  document.getElementById("interestsText").textContent=d.interests;
+  document.getElementById("workText").textContent=d.work;
+  document.getElementById("contactText").textContent=d.contact;
+  document.getElementById("year").textContent=new Date().getFullYear();
+  fields.forEach(k=>document.getElementById("edit"+k[0].toUpperCase()+k.slice(1)).value=d[k]);
+}
+function toggleEditor(){ document.getElementById("editor").classList.toggle("hidden"); }
+function saveContent(e){
+  e.preventDefault(); const d={};
+  fields.forEach(k=>d[k]=document.getElementById("edit"+k[0].toUpperCase()+k.slice(1)).value.trim());
+  localStorage.setItem("myPersonalSite",JSON.stringify(d)); render(); alert("इस ब्राउज़र में बदलाव सेव हो गए।");
+}
+function resetContent(){ localStorage.removeItem("myPersonalSite"); render(); }
+render();
+</script>
+</body>
+</html>
